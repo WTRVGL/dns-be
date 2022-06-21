@@ -1,4 +1,4 @@
-package entities
+package models
 
 type Availability struct {
 	Status        string

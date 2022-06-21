@@ -1,9 +1,9 @@
-package test
+package domain
 
 import (
 	"testing"
 
-	"github.com/WTRVGL/dns-be/internal/entities/errors"
+	"github.com/WTRVGL/dns-be/internal/models/errors"
 	"github.com/WTRVGL/dns-be/pkg"
 )
 
