@@ -1,14 +1,18 @@
-package tests
+package test
+
+/*
+
+
 
 import (
-	"github.com/WTRVGL/dns-be/retriever"
+	"github.com/WTRVGL/dns-be/dns"
 	"testing"
 )
 
 func TestAvailableDomain(t *testing.T) {
 	domainName := "ifthisgetsregisteredthenripunittest.be"
-	availability, _ := retriever.CheckDomainAvailability(domainName)
-	want := retriever.DomainAvailability{
+	availability, _ := dns.CheckDomainAvailability(domainName)
+	want := dns.DomainAvailability{
 		Status:        "available",
 		DateAvailable: "",
 	}
@@ -19,8 +23,8 @@ func TestAvailableDomain(t *testing.T) {
 
 func TestUnavailableDomain(t *testing.T) {
 	domainName := "dnsbelgium.be"
-	availability, _ := retriever.CheckDomainAvailability(domainName)
-	want := retriever.DomainAvailability{
+	availability, _ := dns.CheckDomainAvailability(domainName)
+	want := dns.DomainAvailability{
 		Status:        "inuse",
 		DateAvailable: "",
 	}
@@ -28,3 +32,5 @@ func TestUnavailableDomain(t *testing.T) {
 		t.Errorf("vCheckDomainAvailability(\"dnsbelgium.be\"), got %s, want %s", availability, want)
 	}
 }
+
+*/
