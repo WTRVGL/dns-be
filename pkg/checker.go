@@ -7,27 +7,27 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/WTRVGL/dns-be/internal/entities"
-	"github.com/WTRVGL/dns-be/internal/entities/errors"
+	"github.com/WTRVGL/dns-be/internal/models"
+	"github.com/WTRVGL/dns-be/internal/models/errors"
 )
 
-type Domain struct {
+type domain struct {
 	Name         string
-	Availability entities.Availability
+	Availability models.Availability
 }
 
-func NewDomain(name string) (*Domain, error) {
-	d := &Domain{Name: name}
+func NewDomain(name string) (*domain, error) {
+	d := &domain{Name: name}
 	err := d.validate()
 
 	if err != nil {
-		return &Domain{}, err
+		return &domain{}, err
 	}
 
 	return d, nil
 }
 
-func (d *Domain) validate() error {
+func (d *domain) validate() error {
 	//Splits up domain name. Valid domain should be a [2]string
 	sliced := strings.Split(d.Name, ".")
 	if len(sliced) > 2 {
@@ -57,20 +57,20 @@ func (d *Domain) validate() error {
 	return nil
 }
 
-func (d *Domain) CheckAvailability() (Domain, error) {
+func (d *domain) CheckAvailability() (domain, error) {
 	apiUrl := "https://api.dnsbelgium.be/whois/registration/" + d.Name
 	resp, _ := http.Get(apiUrl)
 	var responseJson []byte
 	switch resp.StatusCode {
 	case 404:
-		d.Availability = entities.Availability{Status: "Available", DateAvailable: ""}
+		d.Availability = models.Availability{Status: "available", DateAvailable: ""}
 		return *d, nil
 	case 200:
 		responseJson, _ = ioutil.ReadAll(resp.Body)
 		break
 	}
 
-	var domainResponse entities.DomainResponse
+	var domainResponse models.DomainResponse
 	json.Unmarshal(responseJson, &domainResponse)
 
 	//status "quarantine" or "inuse"
