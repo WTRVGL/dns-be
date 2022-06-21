@@ -9,7 +9,7 @@ import (
 
 func TestValidDomain(t *testing.T) {
 	domainName := "dnsbelgium.be"
-	_, err := pkg.NewDomain(domainName)
+	_, err := checker.NewDomain(domainName)
 	if err != nil {
 		t.Errorf("validateDomainName(\"dnsbelgium.be\", %d)", err)
 	}
@@ -17,7 +17,7 @@ func TestValidDomain(t *testing.T) {
 
 func TestIncompatibleTLD(t *testing.T) {
 	domainName := "wouter.land"
-	_, err := pkg.NewDomain(domainName)
+	_, err := checker.NewDomain(domainName)
 	want := errors.BadTLD
 	if err != want {
 		t.Errorf("NewDomain(\"wouter.land\", %d)", err)
@@ -25,7 +25,7 @@ func TestIncompatibleTLD(t *testing.T) {
 }
 func TestNonAcceptedSymbol(t *testing.T) {
 	domainName := "wouter_.be"
-	_, err := pkg.NewDomain(domainName)
+	_, err := checker.NewDomain(domainName)
 	want := errors.InvalidDomain
 	if err != want {
 		t.Errorf("NewDomain(\"wouter.land\", %d)", err)
@@ -34,7 +34,7 @@ func TestNonAcceptedSymbol(t *testing.T) {
 
 func TestInvalidFormat(t *testing.T) {
 	domainName := "api.wouter.be"
-	_, err := pkg.NewDomain(domainName)
+	_, err := checker.NewDomain(domainName)
 	want := errors.InvalidDomain
 	if err != want {
 		t.Errorf("NewDomain(\"wouter.land\", %d)", err)
