@@ -1,4 +1,4 @@
-package pkg
+package checker
 
 import (
 	"encoding/json"
