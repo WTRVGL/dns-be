@@ -1,4 +1,4 @@
-package retriever
+package entities
 
 type DomainResponse struct {
 	DomainInfo struct {
