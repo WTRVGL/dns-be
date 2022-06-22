@@ -21,7 +21,7 @@ func NewDomain(name string) (*domain, error) {
 	err := d.validate()
 
 	if err != nil {
-		return &domain{}, err
+		return nil, err
 	}
 
 	return d, nil
@@ -57,25 +57,25 @@ func (d *domain) validate() error {
 	return nil
 }
 
-func (d *domain) CheckAvailability() (domain, error) {
+func (d *domain) CheckAvailability() (*domain, error) {
 	apiUrl := "https://api.dnsbelgium.be/whois/registration/" + d.Name
 	resp, _ := http.Get(apiUrl)
 	var responseJson []byte
 	switch resp.StatusCode {
 	case 404:
 		d.Availability = models.Availability{Status: "available", DateAvailable: ""}
-		return *d, nil
+		return d, nil
 	case 200:
 		responseJson, _ = ioutil.ReadAll(resp.Body)
 		break
 	}
 
 	var domainResponse models.DomainResponse
-	json.Unmarshal(responseJson, &domainResponse)
+	_ = json.Unmarshal(responseJson, &domainResponse)
 
 	//status "quarantine" or "inuse"
 	d.Availability.Status = strings.ToLower(strings.Split(domainResponse.DomainInfo.Status, ".")[2])
 	d.Availability.DateAvailable = domainResponse.DomainInfo.DateAvailable
 
-	return *d, nil
+	return d, nil
 }
