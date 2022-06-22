@@ -3,13 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
-	checker "github.com/WTRVGL/dns-be/pkg"
 	"os"
+
+	checker "github.com/WTRVGL/dns-be/pkg"
 )
 
 func main() {
 	domainNameFlag := flag.String("n", "", ".be domain to be checked")
 	flag.Parse()
+
+	if *domainNameFlag == "" {
+		fmt.Printf("no arguments used, please execute with a -n flag\n see -h for more information")
+		os.Exit(1)
+	}
 
 	domain, err := checker.NewDomain(*domainNameFlag)
 	if err != nil {
