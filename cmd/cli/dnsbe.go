@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -8,39 +9,49 @@ import (
 	checker "github.com/WTRVGL/dns-be/pkg"
 )
 
+var (
+	NoArguments = errors.New("no arguments used, please execute with a -n flag\n see -h for more information")
+	DomainInUse = errors.New("domain is currently in use")
+)
+
 func main() {
+	err := Run()
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	os.Exit(0)
+}
+
+func Run() error {
 	domainNameFlag := flag.String("n", "", ".be domain to be checked")
 	flag.Parse()
 
 	if *domainNameFlag == "" {
-		fmt.Printf("no arguments used, please execute with a -n flag\n see -h for more information")
-		os.Exit(1)
+		return NoArguments
 	}
 
 	domain, err := checker.NewDomain(*domainNameFlag)
 	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
+		return err
 	}
+
 	domain, err = domain.CheckAvailability()
 
 	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
+		return err
 	}
 
 	switch domain.Availability.Status {
 	case "inuse":
-		fmt.Printf("domain %s\n is currently in use", *domainNameFlag)
-		os.Exit(0)
-		break
+		return DomainInUse
 	case "quarantine":
 		fmt.Printf("domain %s is quarantined and becomes available %s\n", *domainNameFlag, domain.Availability.DateAvailable)
-		os.Exit(0)
+		break
 	case "available":
 		fmt.Printf("domain %s is available\n", *domainNameFlag)
-		os.Exit(0)
 		break
 	}
 
+	return nil
 }
