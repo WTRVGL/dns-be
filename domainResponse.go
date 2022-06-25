@@ -1,4 +1,4 @@
-package models
+package dns_be
 
 type DomainResponse struct {
 	DomainInfo struct {

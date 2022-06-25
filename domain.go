@@ -1,4 +1,4 @@
-package checker
+package dns_be
 
 import (
 	"encoding/json"
@@ -6,14 +6,11 @@ import (
 	"net/http"
 	"strings"
 	"unicode"
-
-	"github.com/WTRVGL/dns-be/internal/models"
-	"github.com/WTRVGL/dns-be/internal/models/errors"
 )
 
 type domain struct {
-	Name         string
-	Availability models.Availability
+	Name         string       `json:"name"`
+	Availability Availability `json:"availability"`
 }
 
 func NewDomain(name string) (*domain, error) {
@@ -31,10 +28,10 @@ func (d *domain) validate() error {
 	//Splits up domain name. Valid domain should be a [2]string
 	sliced := strings.Split(d.Name, ".")
 	if len(sliced) > 2 {
-		return errors.InvalidDomain
+		return InvalidDomain
 	}
 	if sliced[1] != "be" {
-		return errors.BadTLD
+		return BadTLD
 	}
 
 	//Checks if alphanumerical
@@ -51,7 +48,7 @@ func (d *domain) validate() error {
 			return false
 		}
 		if !isLetterOrNumber(r) {
-			return errors.InvalidDomain
+			return InvalidDomain
 		}
 	}
 	return nil
@@ -63,14 +60,14 @@ func (d *domain) CheckAvailability() (*domain, error) {
 	var responseJson []byte
 	switch resp.StatusCode {
 	case 404:
-		d.Availability = models.Availability{Status: "available", DateAvailable: ""}
+		d.Availability = Availability{Status: "available", DateAvailable: ""}
 		return d, nil
 	case 200:
 		responseJson, _ = ioutil.ReadAll(resp.Body)
 		break
 	}
 
-	var domainResponse models.DomainResponse
+	var domainResponse DomainResponse
 	_ = json.Unmarshal(responseJson, &domainResponse)
 
 	//status "quarantine" or "inuse"

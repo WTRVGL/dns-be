@@ -4,9 +4,8 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	checker "github.com/WTRVGL/dns-be"
 	"os"
-
-	checker "github.com/WTRVGL/dns-be/pkg"
 )
 
 var (

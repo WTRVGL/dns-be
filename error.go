@@ -1,4 +1,4 @@
-package errors
+package dns_be
 
 import "errors"
 
